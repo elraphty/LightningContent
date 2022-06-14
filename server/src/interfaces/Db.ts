@@ -7,8 +7,8 @@ export interface User {
 
 export interface UserBalance {
     id?: number;
-    userid: number;
-    amount: number;
+    userId: number;
+    balance: number;
 }
 
 export interface TransactionLogs {
