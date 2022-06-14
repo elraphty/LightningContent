@@ -3,7 +3,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import routes from './routes';
 import dotenv from 'dotenv';
-import { responseError } from './helpers';
+import { responseError } from './utils';
 dotenv.config();
 
 const app: Application = express();
