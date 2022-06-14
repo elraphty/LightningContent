@@ -13,10 +13,10 @@ export const development: Knex.Config = {
         database: process.env.DEV_DB_NAME,
     },
     migrations: {
-        directory: path.join(__dirname, '/db/migrations')
+        directory: path.join(__dirname, '/src/db/migrations')
     },
     seeds: {
-        directory: path.join(__dirname, '/db/seeds')
+        directory: path.join(__dirname, '/src/db/seeds')
     }
 };
 
@@ -29,9 +29,9 @@ export const test: Knex.Config = {
         database: process.env.TEST_DB_NAME,
     },
     migrations: {
-        directory: path.join(__dirname, '/db/migrations')
+        directory: path.join(__dirname, '/src/db/migrations')
     },
     seeds: {
-        directory: path.join(__dirname, '/db/seeds')
+        directory: path.join(__dirname, '/src/db/seeds')
     }
 };

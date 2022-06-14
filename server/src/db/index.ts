@@ -1,7 +1,7 @@
 const env = process.env.NODE_ENV || 'development';
 
 import {Knex, knex} from 'knex';
-import {development, test} from '../knexfile';
+import {development, test} from '../../knexfile';
 
 let KnexSetup: Knex;
 
