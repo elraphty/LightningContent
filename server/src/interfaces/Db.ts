@@ -3,12 +3,23 @@ export interface User {
     token?: string;
     username: string;
     password?: string;
+    details?: UserDetails;
 }
 
 export interface UserBalance {
     id?: number;
     userId: number;
     balance: number;
+}
+
+export interface UserDetails {
+    id?: number;
+    userId: number;
+    firstname?: string;
+    lastname?: string;
+    image?: string;
+    bio?: string;
+    url?: string;
 }
 
 export interface TransactionLogs {

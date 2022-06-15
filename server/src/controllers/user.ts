@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import knex from '../db';
 import { validationResult } from 'express-validator';
-import { User, UserBalance } from '../interfaces/Db';
+import { User, UserBalance, UserDetails } from '../interfaces/Db';
 import { responseSuccess, responseErrorValidation, responseError } from '../utils';
 import { hashPassword, verifyPassword } from '../utils/password';
 import { signUser } from '../utils/jwt';
+import { RequestUser } from '../interfaces';
 
 // Controller for registering user
 export const registerUser = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
@@ -34,6 +35,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
             const id = userId[0].id;
 
             await knex<UserBalance>('usersbalance').insert({ userId: id, balance: 0 });
+            await knex<UserDetails>('usersdetails').insert({ userId: id });
         }
 
         responseSuccess(res, 200, 'Successfully created user', {});
@@ -72,6 +74,69 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
             user.token = token;
 
             return responseSuccess(res, 200, 'Successfully login', user);
+        } else {
+            return responseError(res, 404, 'Not a valid user');
+        }
+    } catch (err) {
+        next(err);
+    }
+};
+
+// Controller for user details
+export const userDetails = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    try {
+        // Finds the validation errors in this request and wraps them in an object with handy functions
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return responseErrorValidation(res, 400, errors.array());
+        }
+
+        const reqUser = req as RequestUser;
+        const userId = reqUser.user.id;
+
+        const bio: string = req.body.bio;
+        const url: string = req.body.url;
+        const firstname: string = req.body.firstname;
+        const lastname: string = req.body.lastname;
+
+        const users: User[] = await knex<User>('users').where({ id: userId });
+
+        if (users.length > 0) {
+            await knex<UserDetails>('usersdetails').where({ userId }).update({ firstname, lastname, url, bio });
+
+            const user = await knex<UserDetails>('usersdetails').where({ userId }).first();
+        
+            return responseSuccess(res, 200, 'Successfully updated user details', user);
+        } else {
+            return responseError(res, 404, 'Not a valid user');
+        }
+    } catch (err) {
+        next(err);
+    }
+};
+
+// Controller for user details
+export const getUser = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    try {
+        // Finds the validation errors in this request and wraps them in an object with handy functions
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return responseErrorValidation(res, 400, errors.array());
+        }
+
+        const userId: number = Number(req.params.userId);
+
+        const users: User[] = await knex<User>('users').where({ id: userId });
+
+        if (users.length > 0) {
+            const user = users[0];
+
+            const userDetails = await knex<UserDetails>('usersdetails').where({ userId }).first();
+            user.details = userDetails;
+    
+            return responseSuccess(res, 200, 'Successfully got user', user);
         } else {
             return responseError(res, 404, 'Not a valid user');
         }
