@@ -2,7 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import knex from '../db';
 import { validationResult } from 'express-validator';
 import { User, UserBalance, UserDetails } from '../interfaces/Db';
+import { Formidable } from 'formidable';
 import { responseSuccess, responseErrorValidation, responseError } from '../utils';
+import { uploadFile } from '../config/cloudinary';
 import { hashPassword, verifyPassword } from '../utils/password';
 import { signUser } from '../utils/jwt';
 import { RequestUser } from '../interfaces';
@@ -106,7 +108,7 @@ export const userDetails = async (req: Request, res: Response, next: NextFunctio
             await knex<UserDetails>('usersdetails').where({ userId }).update({ firstname, lastname, url, bio });
 
             const user = await knex<UserDetails>('usersdetails').where({ userId }).first();
-        
+
             return responseSuccess(res, 200, 'Successfully updated user details', user);
         } else {
             return responseError(res, 404, 'Not a valid user');
@@ -135,11 +137,40 @@ export const getUser = async (req: Request, res: Response, next: NextFunction): 
 
             const userDetails = await knex<UserDetails>('usersdetails').where({ userId }).first();
             user.details = userDetails;
-    
+
             return responseSuccess(res, 200, 'Successfully got user', user);
         } else {
             return responseError(res, 404, 'Not a valid user');
         }
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const userImage = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    try {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return responseErrorValidation(res, 400, errors.array());
+        }
+
+        const reqUser = req as RequestUser;
+        const userId = reqUser.user.id;
+
+        const form = new Formidable();
+
+        form.parse(req, (err, fields, files) => {
+            // @ts-ignore
+            uploadFile(files.upload.filepath, async (err, url) => {
+                if (err) {
+                    return responseError(res, 403, err);
+                } else {
+                    await knex<UserDetails>('userdetails').update({ image: url }).where({ userId })
+                    return responseSuccess(res, 201, 'Successfully updated user image', url);
+                }
+            });
+        });
     } catch (err) {
         next(err);
     }
