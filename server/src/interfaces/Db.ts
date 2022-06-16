@@ -3,6 +3,7 @@ export interface User {
     token?: string;
     username: string;
     password?: string;
+    pubkey?: string;
     details?: UserDetails;
 }
 

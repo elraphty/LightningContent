@@ -1,4 +1,4 @@
-import { body, param } from 'express-validator';
+import {body, param} from 'express-validator';
 
 const myWhitelist: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_#@.';
 
@@ -10,7 +10,7 @@ export const createUser = [
     .rtrim()
     .whitelist(myWhitelist)
     .escape()
-    .isLength({ min: 5 })
+    .isLength({min: 5})
     .withMessage('Enter a username with a minimum of five characters '),
   body('password')
     .not().isEmpty()
@@ -19,7 +19,7 @@ export const createUser = [
     .rtrim()
     .whitelist(myWhitelist)
     .escape()
-    .isLength({ min: 6 })
+    .isLength({min: 6})
     .withMessage('Password length must be up to six characters'),
 ]
 

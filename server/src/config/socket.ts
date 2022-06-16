@@ -1,4 +1,4 @@
-import { Server, Socket } from 'socket.io';
+import {Server, Socket} from 'socket.io';
 import http from 'http';
 
 let emitSocketEvent: Socket;
@@ -18,6 +18,6 @@ const initializeSocket = (server: http.Server) => {
     });
 }
 
-export { emitSocketEvent };
+export {emitSocketEvent};
 
 export default initializeSocket;

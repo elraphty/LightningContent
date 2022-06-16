@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from 'express';
-import { verifyUser } from './jwt';
-import { responseError } from '.';
-import { User } from '../interfaces/Db';
-import { RequestUser } from '../interfaces';
+import {NextFunction, Request, Response} from 'express';
+import {verifyUser} from './jwt';
+import {responseError} from '.';
+import {User} from '../interfaces/Db';
+import {RequestUser} from '../interfaces';
 interface TokenData {
   data: User
 };

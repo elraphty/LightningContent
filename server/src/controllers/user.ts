@@ -1,13 +1,14 @@
-import { Request, Response, NextFunction } from 'express';
+import {Request, Response, NextFunction} from 'express';
 import knex from '../db';
-import { validationResult } from 'express-validator';
-import { User, UserBalance, UserDetails } from '../interfaces/Db';
-import { Formidable } from 'formidable';
-import { responseSuccess, responseErrorValidation, responseError } from '../utils';
-import { uploadFile } from '../config/cloudinary';
-import { hashPassword, verifyPassword } from '../utils/password';
-import { signUser } from '../utils/jwt';
-import { RequestUser } from '../interfaces';
+import {validationResult} from 'express-validator';
+import {User, UserBalance, UserDetails} from '../interfaces/Db';
+import {Formidable} from 'formidable';
+import {responseSuccess, responseErrorValidation, responseError} from '../utils';
+import {uploadFile} from '../config/cloudinary';
+import {hashPassword, verifyPassword} from '../utils/password';
+import {signUser} from '../utils/jwt';
+import {RequestUser} from '../interfaces';
+import {emitSocketEvent} from '../config/socket';
 
 // Controller for registering user
 export const registerUser = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
@@ -22,7 +23,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
         const pass: string = req.body.password;
 
         // Check if username already exists in the database, throw an error if it does
-        const user: User[] = await knex<User>('users').where({ username });
+        const user: User[] = await knex<User>('users').where({username});
 
         if (user.length > 0) {
             return responseError(res, 400, 'User already exists');
@@ -30,14 +31,14 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
 
         const password: string = hashPassword(pass);
 
-        const userId = await knex<User>('users').insert({ username, password }).returning('id');
+        const userId = await knex<User>('users').insert({username, password}).returning('id');
 
         if (userId.length > 0) {
             // Create user balance of default 0
             const id = userId[0].id;
 
-            await knex<UserBalance>('usersbalance').insert({ userId: id, balance: 0 });
-            await knex<UserDetails>('usersdetails').insert({ userId: id });
+            await knex<UserBalance>('usersbalance').insert({userId: id, balance: 0});
+            await knex<UserDetails>('usersdetails').insert({userId: id});
         }
 
         responseSuccess(res, 200, 'Successfully created user', {});
@@ -59,7 +60,7 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
         const username: string = req.body.username;
         const pass: string = req.body.password;
 
-        const users: User[] = await knex<User>('users').where({ username });
+        const users: User[] = await knex<User>('users').where({username});
 
         if (users.length > 0) {
             let user = users[0];
@@ -102,12 +103,12 @@ export const userDetails = async (req: Request, res: Response, next: NextFunctio
         const firstname: string = req.body.firstname;
         const lastname: string = req.body.lastname;
 
-        const users: User[] = await knex<User>('users').where({ id: userId });
+        const users: User[] = await knex<User>('users').where({id: userId});
 
         if (users.length > 0) {
-            await knex<UserDetails>('usersdetails').where({ userId }).update({ firstname, lastname, url, bio });
+            await knex<UserDetails>('usersdetails').where({userId}).update({firstname, lastname, url, bio});
 
-            const user = await knex<UserDetails>('usersdetails').where({ userId }).first();
+            const user = await knex<UserDetails>('usersdetails').where({userId}).first();
 
             return responseSuccess(res, 200, 'Successfully updated user details', user);
         } else {
@@ -130,12 +131,12 @@ export const getUser = async (req: Request, res: Response, next: NextFunction): 
 
         const userId: number = Number(req.params.userId);
 
-        const users: User[] = await knex<User>('users').where({ id: userId });
+        const users: User[] = await knex<User>('users').where({id: userId});
 
         if (users.length > 0) {
             const user = users[0];
 
-            const userDetails = await knex<UserDetails>('usersdetails').where({ userId }).first();
+            const userDetails = await knex<UserDetails>('usersdetails').where({userId}).first();
             user.details = userDetails;
 
             return responseSuccess(res, 200, 'Successfully got user', user);
@@ -166,7 +167,7 @@ export const userImage = async (req: Request, res: Response, next: NextFunction)
                 if (err) {
                     return responseError(res, 403, err);
                 } else {
-                    await knex<UserDetails>('userdetails').update({ image: url }).where({ userId })
+                    await knex<UserDetails>('userdetails').update({image: url}).where({userId})
                     return responseSuccess(res, 201, 'Successfully updated user image', url);
                 }
             });
@@ -175,3 +176,40 @@ export const userImage = async (req: Request, res: Response, next: NextFunction)
         next(err);
     }
 };
+
+export const lnurlLogin = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    try {
+        const query = req.query;
+        if (query.key) {
+            const key: string = String(query.key);
+
+            // Check if user exists in the database;
+            const users: User[] = await knex<User>('users').where({pubkey: key});
+
+            if (users.length === 0) {
+                const userCreated = await knex<User>('users').insert({pubkey: key}).returning('id');
+                const userId = userCreated[0].id;
+
+                // Create user balance default to 0
+                await knex<UserBalance>('usersbalance').insert({userId, balance: 0});
+                await knex<UserDetails>('usersdetails').insert({userId});
+            }
+
+            // Get user again for token
+            const usersToken: User[] = await knex<User>('users').where({pubkey: key});
+            let user = usersToken[0];
+
+            // Delete user password and pk
+            delete user.password;
+
+            const token = signUser(user);
+
+            emitSocketEvent.emit('auth', {key, token});
+            res.json({key});
+        } else {
+            return responseError(res, 404, 'Unsuccesful LNURL AUTH login');
+        }
+    } catch (err) {
+        next(err);
+    }
+}
