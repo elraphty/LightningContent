@@ -25,7 +25,6 @@ export const createUser = [
 
 export const updateUser = [
   body('firstname')
-    .not().isEmpty()
     .isString()
     .ltrim()
     .rtrim()
@@ -33,7 +32,6 @@ export const updateUser = [
     .escape()
     .withMessage('Enter firstname'),
   body('lastname')
-    .not().isEmpty()
     .isString()
     .ltrim()
     .rtrim()
@@ -41,7 +39,6 @@ export const updateUser = [
     .escape()
     .withMessage('Enter lastname'),
   body('url')
-    .not().isEmpty()
     .isString()
     .ltrim()
     .rtrim()
@@ -49,11 +46,10 @@ export const updateUser = [
     .escape()
     .withMessage('Enter url'),
   body('bio')
-    .not().isEmpty()
     .isString()
     .ltrim()
     .rtrim()
-    .whitelist(myWhitelist)
+    // .whitelist(myWhitelist)
     .escape()
     .withMessage('Enter bio'),
 ]

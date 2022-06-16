@@ -167,7 +167,7 @@ export const userImage = async (req: Request, res: Response, next: NextFunction)
                 if (err) {
                     return responseError(res, 403, err);
                 } else {
-                    await knex<UserDetails>('userdetails').update({image: url}).where({userId})
+                    await knex<UserDetails>('usersdetails').update({image: url}).where({userId});
                     return responseSuccess(res, 201, 'Successfully updated user image', url);
                 }
             });
