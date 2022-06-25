@@ -1,21 +1,26 @@
+import mongoose from 'mongoose';
 export interface User {
-    id?: number;
+    _id?: mongoose.Schema.Types.ObjectId;
     token?: string;
     username: string;
     password?: string;
     pubkey?: string;
     details?: UserDetails;
+    __v?: number;
 }
 
 export interface UserBalance {
-    id?: number;
-    userId: number;
-    balance: number;
+    _id?: mongoose.Schema.Types.ObjectId;
+    user: mongoose.Schema.Types.ObjectId;
+    usd?: number;
+    eur?: number;
+    ngn?: number;
+    ghs?: number;
 }
 
 export interface UserDetails {
-    id?: number;
-    userId: number;
+    _id?: mongoose.Schema.Types.ObjectId;
+    user: mongoose.Schema.Types.ObjectId;
     firstname?: string;
     lastname?: string;
     image?: string;

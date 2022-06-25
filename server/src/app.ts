@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import routes from './routes';
 import dotenv from 'dotenv';
 import {responseError} from './utils';
+import './config/mongodb';
 dotenv.config();
 
 const app: Application = express();

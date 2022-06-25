@@ -20,7 +20,7 @@ export const authUser = (req: Request, res: Response, next: NextFunction) => {
       }
 
       const user: User = {
-        id: ans.data.id,
+        _id: ans.data._id,
         username: ans.data.username
       };
 

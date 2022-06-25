@@ -15,6 +15,6 @@ router.put('/image', authUser, userImage);
 
 router.get('/lnurl', lnurlLogin);
 
-router.get('/', user, getUser);
+router.get('/:userId', user, getUser);
 
 export default router;

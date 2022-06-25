@@ -24,14 +24,14 @@ export const createUser = [
 ]
 
 export const updateUser = [
-  body('firstname')
+  body('firstName')
     .isString()
     .ltrim()
     .rtrim()
     .whitelist(myWhitelist)
     .escape()
     .withMessage('Enter firstname'),
-  body('lastname')
+  body('lastName')
     .isString()
     .ltrim()
     .rtrim()
