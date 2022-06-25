@@ -24,6 +24,7 @@
     "jsonwebtoken": "^8.5.1",
     "knex": "^2.1.0",
     "lnurl": "^0.24.2",
+    "mongoose": "^6.4.0",
     "pg": "^8.7.3",
     "socket.io": "^4.5.1",
     "ts-node": "^10.8.1",
@@ -39,6 +40,7 @@
     "@types/formidable": "^2.0.5",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/knex": "^0.16.1",
+    "@types/mongoose": "^5.11.97",
     "@types/pg": "^8.6.5",
     "@types/uuid": "^8.3.4"
   }
