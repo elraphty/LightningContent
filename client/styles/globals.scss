@@ -60,7 +60,7 @@ label.form__label {
 
 .sidebar {
   width: 18vw;
-  background-color: #000000;
+  background-color: rgb(251, 191, 36);
   position: absolute;
   top: 0;
   bottom: 0;
@@ -412,10 +412,4 @@ label.form__label {
       transform: rotate(360deg);
     }
   }
-}
-
-.p2sh-wrap {
-  border: 0.5px solid #c3c3c3;
-  padding: 20px 40px;
-  margin-top: 30px;
 }
