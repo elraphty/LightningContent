@@ -1,4 +1,4 @@
-import { createLnRpc, createRouterRpc } from '@radar/lnrpc';
+import {createLnRpc, createRouterRpc} from '@radar/lnrpc';
 import 'dotenv/config';
 
 const lnRpcClient = createLnRpc({

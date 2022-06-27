@@ -1,7 +1,7 @@
 
-import { ValidationError } from "express-validator";
-import { User } from "./Db";
-import { Request } from "express";
+import {ValidationError} from "express-validator";
+import {User} from "./Db";
+import {Request} from "express";
 
 export interface DataResponse {
     msg: string;

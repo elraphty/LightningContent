@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from 'express';
-import { verifyUser } from './jwt';
-import { responseError } from '.';
-import { User } from '../interfaces/Db';
-import { RequestUser } from '../interfaces';
+import {NextFunction, Request, Response} from 'express';
+import {verifyUser} from './jwt';
+import {responseError} from '.';
+import {User} from '../interfaces/Db';
+import {RequestUser} from '../interfaces';
 interface TokenData {
   data: User
 };
@@ -20,7 +20,7 @@ export const authUser = (req: Request, res: Response, next: NextFunction) => {
       }
 
       const user: User = {
-        id: ans.data.id,
+        _id: ans.data._id,
         username: ans.data.username
       };
 

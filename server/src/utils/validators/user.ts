@@ -1,4 +1,4 @@
-import { body } from 'express-validator';
+import {body, param} from 'express-validator';
 
 const myWhitelist: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_#@.';
 
@@ -21,4 +21,46 @@ export const createUser = [
     .escape()
     .isLength({min: 6})
     .withMessage('Password length must be up to six characters'),
+]
+
+export const updateUser = [
+  body('firstName')
+    .isString()
+    .ltrim()
+    .rtrim()
+    .whitelist(myWhitelist)
+    .escape()
+    .withMessage('Enter firstname'),
+  body('lastName')
+    .isString()
+    .ltrim()
+    .rtrim()
+    .whitelist(myWhitelist)
+    .escape()
+    .withMessage('Enter lastname'),
+  body('url')
+    .isString()
+    .ltrim()
+    .rtrim()
+    .whitelist(myWhitelist)
+    .escape()
+    .withMessage('Enter url'),
+  body('bio')
+    .isString()
+    .ltrim()
+    .rtrim()
+    // .whitelist(myWhitelist)
+    .escape()
+    .withMessage('Enter bio'),
+]
+
+export const user = [
+  param('userId')
+    .not().isEmpty()
+    .isString()
+    .ltrim()
+    .rtrim()
+    .whitelist(myWhitelist)
+    .escape()
+    .withMessage('Enter a userId ')
 ]

@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  redis:
+    image: redis
+    container_name: afriex.redis
+    expose:
+      - 6379
+    ports:
+      - ${REDIS_PORT}:6379
+  mongo:
+    image: mongo:4.4-bionic
+    container_name: afriex.mongo
+    expose:
+      - 27017
+    ports:
+      - ${MONGO_PORT}:27017
+    volumes:
+      - mongo:/data/db
+volumes:
+  mongo:

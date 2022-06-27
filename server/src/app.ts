@@ -1,9 +1,10 @@
-import express, { Application, Response, Request, NextFunction } from 'express';
+import express, {Application, Response, Request, NextFunction} from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import routes from './routes';
 import dotenv from 'dotenv';
-import { responseError } from './utils';
+import {responseError} from './utils';
+import './config/mongodb';
 dotenv.config();
 
 const app: Application = express();
@@ -11,7 +12,7 @@ const app: Application = express();
 // App middlewares
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 
 // Router files
 app.use('/', routes);
