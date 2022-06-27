@@ -11,8 +11,8 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1>Hello Testing</h1>
+      <main className={''}>
+        <h1 className='text-red mt-5'>Hello Testing</h1>
       </main>
     </div>
   )
