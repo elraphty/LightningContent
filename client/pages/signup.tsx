@@ -1,14 +1,13 @@
 import type {NextPage} from 'next';
 import Head from 'next/head';
-import {useMemo, useCallback, useState, useContext} from 'react';
+import {useMemo, useCallback, useState} from 'react';
 import {Formik, Form} from 'formik';
 import * as Yup from "yup";
 import Link from 'next/link';
 import axios from 'axios';
 import {BASE_URL} from '../helpers/axios';
-import {setToStorage} from '../helpers/localstorage';
 import {useRouter} from 'next/router';
-import { useAuth } from '../pages/context/AuthContext';
+import {useAuth} from '../pages/context/AuthContext';
 import {SetSubmitting, AuthFormValues} from '../interfaces';
 import QR from '../components/Lnurl';
 
@@ -23,7 +22,7 @@ const Signup: NextPage = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const {setDisplayLnUrl} = useAuth();
+  const {setDisplayLnUrl, signup} = useAuth();
 
   const inputClassName = useMemo(
     () =>
@@ -39,7 +38,7 @@ const Signup: NextPage = () => {
     [username, password],
   );
 
-  const formSubmit: SetSubmitting<AuthFormValues> = useCallback((values: AuthFormValues, {setSubmitting}) => {
+  const formSubmit: SetSubmitting<AuthFormValues> = useCallback(async (values: AuthFormValues, {setSubmitting}) => {
     const body: AuthFormValues = {
       username: values.username,
       password: values.password
@@ -47,15 +46,16 @@ const Signup: NextPage = () => {
 
     setUsername(values.username);
     setPassword(values.password);
-
-    axios.post(`${BASE_URL}user/register`, body)
-      .then(async res => {
-        router.push('/login');
-      })
-      .catch(err => {
+    
+    try {
+      const success = await signup(body);
+      if (!success) {
         setSignupError('Could not create account');
-      });
-
+      }
+    } catch (e) {
+      setSignupError('Could not create account');
+    }
+    
     setSubmitting(false);
   }, []);
 

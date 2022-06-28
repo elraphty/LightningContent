@@ -9,7 +9,7 @@ export const loginUser = async (data: AuthFormValues) => {
   return res;
 };
 
-export const logoutUser = async (data: AuthFormValues) => {
+export const signupUser = async (data: AuthFormValues) => {
   const res = await axios.post('/user/register', data);
   return res;
 };

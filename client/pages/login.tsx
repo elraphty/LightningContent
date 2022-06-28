@@ -5,12 +5,9 @@ import {Formik, Form} from 'formik';
 import {useRouter} from 'next/router';
 import * as Yup from "yup";
 import Link from 'next/link';
-import axios from 'axios';
-import {BASE_URL} from '../helpers/axios';
-import {setToStorage, getFromStorage} from '../helpers/localstorage';
 import {SetSubmitting, AuthFormValues} from '../interfaces';
 import QR from '../components/Lnurl';
-import { useAuth } from '../pages/context/AuthContext';
+import {useAuth} from '../pages/context/AuthContext';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required('This field is required!').min(3, 'Username must be up to four(4) letters'),
@@ -40,15 +37,18 @@ const Login: NextPage = () => {
     [],
   );
 
-  const formSubmit: SetSubmitting<AuthFormValues> = useCallback((values: AuthFormValues, {setSubmitting}) => {
+  const formSubmit: SetSubmitting<AuthFormValues> = useCallback(async (values: AuthFormValues, {setSubmitting}) => {
     const body: AuthFormValues = {
       username: values.username,
       password: values.password
     };
-    
+
     try {
-      login(body);
-    } catch(e) {
+      const success = await login(body);
+      if (!success) {
+        setLoginError('Could not login, username or password is incorrect');
+      }
+    } catch (e) {
       setLoginError('Could not login, username or password is incorrect');
     }
 

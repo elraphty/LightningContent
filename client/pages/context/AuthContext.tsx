@@ -1,5 +1,5 @@
 import React, {useState, useContext, useCallback, useEffect} from 'react';
-import {lnurlLogin, loginUser} from '../../api/auth';
+import {lnurlLogin, loginUser, signupUser} from '../../api/auth';
 import {AuthFormValues} from '../../interfaces';
 import {useRouter} from 'next/router';
 import {io} from 'socket.io-client';
@@ -33,7 +33,8 @@ interface IAuthContext {
   setDisplayLnUrl: () => void;
   token: string;
   logout: () => void;
-  login: (data: AuthFormValues) => void;
+  login: (data: AuthFormValues) => any;
+  signup: (data: AuthFormValues) => any;
 }
 
 const defaultState = {
@@ -44,7 +45,8 @@ const defaultState = {
   setDisplayLnUrl: () => {},
   token: '',
   logout: () => {},
-  login: (data: AuthFormValues) => {}
+  login: (data: AuthFormValues) => {},
+  signup: (data: AuthFormValues) => {}
 };
 
 export const AuthContext = React.createContext<IAuthContext>(defaultState);
@@ -73,16 +75,25 @@ export const AuthContextProvider = ({children}: Props) => {
     removeFromStorage('lightning-token');
     window.location.href = '/login';
   }
+  
+  const signup = async (data: AuthFormValues) => {
+    const res = await signupUser(data);
+    if (res.status === 200) {
+      return router.push('/login');
+    }
+    return false;
+  }
 
   const login = async (data: AuthFormValues) => {
     const res = await loginUser(data);
     if (res.status === 200) {
-      const token = res.data.data.token
+      const token = res.data.data.token;
       setToken(token);
       setToStorage('lightning-token', token);
 
-      router.push('/');
+      return router.push('/');
     }
+    return false;
   }
 
   const getEventsSocket = useCallback(() => {
@@ -109,7 +120,8 @@ export const AuthContextProvider = ({children}: Props) => {
     setDisplayLnUrl,
     token,
     logout,
-    login
+    login,
+    signup
   };
 
   return (
