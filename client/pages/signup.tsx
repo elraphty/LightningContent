@@ -1,6 +1,6 @@
 import type {NextPage} from 'next';
 import Head from 'next/head';
-import {useMemo, useCallback, useState, useRef} from 'react';
+import {useMemo, useCallback, useState, useContext} from 'react';
 import {Formik, Form} from 'formik';
 import * as Yup from "yup";
 import Link from 'next/link';
@@ -8,7 +8,9 @@ import axios from 'axios';
 import {BASE_URL} from '../helpers/axios';
 import {setToStorage} from '../helpers/localstorage';
 import {useRouter} from 'next/router';
+import {AuthContext} from '../pages/context/AuthContext';
 import {SetSubmitting, AuthFormValues} from '../types';
+import QR from '../components/Lnurl';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required('This field is required!').min(3, 'Username must be up to four(4) letters'),
@@ -20,6 +22,8 @@ const Signup: NextPage = () => {
   const [signupError, setSignupError] = useState('');
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+
+  const {setDisplayLnUrl} = useContext(AuthContext);
 
   const inputClassName = useMemo(
     () =>
@@ -64,10 +68,21 @@ const Signup: NextPage = () => {
       </Head>
 
       <main className="main">
+        <QR />
         <section className='auth_wrap'>
           <div className="wrap">
             <h2 className="form_heading">User Signup</h2>
           </div>
+          <section className="wrap">
+            <button
+              onClick={() => {
+                setDisplayLnUrl()
+              }}
+              type="button"
+              className="font-bold mt-4 mb-4 bg-yellow-400 text-black rounded-lg p-2 w-full">
+              LNURL-Auth Signup
+            </button>
+          </section>
           <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={formSubmit}>{({values, errors, isSubmitting, handleChange}) => (
             <Form>
               {signupError ? <p className="formErrors">{signupError}</p> : null}
@@ -117,7 +132,7 @@ const Signup: NextPage = () => {
                   Create account
                 </button>
               </section>
-              <p className="form_btm_link"> <Link href="/">{"Already have an account? Login"}</Link></p>
+              <p className="form_btm_link"> <Link href="/login">{"Already have an account? Login"}</Link></p>
             </Form>
           )}</Formik>
         </section>

@@ -60,7 +60,7 @@ label.form__label {
 
 .sidebar {
   width: 18vw;
-  background-color: rgb(251, 191, 36);
+  background-color: $mainColor;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -411,5 +411,31 @@ label.form__label {
     100% {
       transform: rotate(360deg);
     }
+  }
+}
+
+.lnurl_wrap {
+  background-color: $mainColor;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  
+  p {
+    font-family: $fontDemi;
+    margin-top: 25px;
+    font-size: 1.1rem;
+  }
+  
+  button {
+    margin-top: 10px;
+    background-color: #000000;
+    color: #FFFFFF;
+    padding: 7px 15px;
+    border-radius: 10px;
+    font-family: $fontDemi;
+    font-size: 0.95rem;
   }
 }

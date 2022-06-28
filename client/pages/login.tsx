@@ -1,6 +1,6 @@
 import type {NextPage} from 'next';
 import Head from 'next/head';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState, useContext} from 'react';
 import {Formik, Form} from 'formik';
 import {useRouter} from 'next/router';
 import * as Yup from "yup";
@@ -9,6 +9,8 @@ import axios from 'axios';
 import {BASE_URL} from '../helpers/axios';
 import {setToStorage, getFromStorage} from '../helpers/localstorage';
 import {SetSubmitting, AuthFormValues} from '../types';
+import QR from '../components/Lnurl';
+import {AuthContext} from '../pages/context/AuthContext';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required('This field is required!').min(3, 'Username must be up to four(4) letters'),
@@ -19,12 +21,10 @@ const Login: NextPage = () => {
   const router = useRouter();
   const [loginError, setLoginError] = useState('');
 
+  const {setDisplayLnUrl} = useContext(AuthContext);
+
   useEffect(() => {
-    const token = getFromStorage('token');
-    if (token) {
-      router.push('/');
-    }
-  }, [router])
+  }, [])
 
   const inputClassName = useMemo(
     () =>
@@ -67,10 +67,19 @@ const Login: NextPage = () => {
       </Head>
 
       <main className="main">
+        <QR />
         <section className='auth_wrap'>
           <div className="wrap">
             <h2 className="form_heading">User Login</h2>
           </div>
+          <section className="wrap">
+            <button
+              onClick={() => setDisplayLnUrl()}
+              type="button"
+              className="font-bold mt-4 mb-4 bg-yellow-400 text-black rounded-lg p-2 w-full">
+              LNURL-Auth Login
+            </button>
+          </section>
           <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={formSubmit} >{({values, errors, isSubmitting, handleChange}) => (
             <Form>
               {loginError ? <p className="formErrors">{loginError}</p> : null}
