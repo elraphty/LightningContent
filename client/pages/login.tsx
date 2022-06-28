@@ -8,9 +8,9 @@ import Link from 'next/link';
 import axios from 'axios';
 import {BASE_URL} from '../helpers/axios';
 import {setToStorage, getFromStorage} from '../helpers/localstorage';
-import {SetSubmitting, AuthFormValues} from '../types';
+import {SetSubmitting, AuthFormValues} from '../interfaces';
 import QR from '../components/Lnurl';
-import {AuthContext} from '../pages/context/AuthContext';
+import { useAuth } from '../pages/context/AuthContext';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required('This field is required!').min(3, 'Username must be up to four(4) letters'),
@@ -21,7 +21,7 @@ const Login: NextPage = () => {
   const router = useRouter();
   const [loginError, setLoginError] = useState('');
 
-  const {setDisplayLnUrl} = useContext(AuthContext);
+  const {setDisplayLnUrl, login} = useAuth();
 
   useEffect(() => {
   }, [])
@@ -45,15 +45,12 @@ const Login: NextPage = () => {
       username: values.username,
       password: values.password
     };
-
-    axios.post(`${BASE_URL}user/login`, body)
-      .then(async res => {
-        await setToStorage('token', res.data.data.token);
-        router.push('/');
-      })
-      .catch(err => {
-        setLoginError('Could not login, username or password is incorrect');
-      });
+    
+    try {
+      login(body);
+    } catch(e) {
+      setLoginError('Could not login, username or password is incorrect');
+    }
 
     setSubmitting(false);
   }, [router]);

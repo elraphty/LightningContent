@@ -2,12 +2,14 @@ import express, {Application, Response, Request, NextFunction} from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import routes from './routes';
-import dotenv from 'dotenv';
+import http from 'http';
 import {responseError} from './utils';
+import initiateSocket from './config/socket';
+import 'dotenv/config';
 import './config/mongodb';
-dotenv.config();
 
 const app: Application = express();
+const server: http.Server = http.createServer(app);
 
 // App middlewares
 app.use(cors());
@@ -16,6 +18,8 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 // Router files
 app.use('/', routes);
+
+initiateSocket(server);
 
 // Error handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction): void => {
@@ -27,4 +31,4 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction): void => {
     }
 });
 
-export default app;
+export default server;

@@ -1,18 +1,18 @@
-import { QRCodeSVG } from 'qrcode.react';
-import { useContext } from 'react';
-import { AuthContext } from '../pages/context/AuthContext';
+import {QRCodeSVG} from 'qrcode.react';
+import {useEffect} from 'react';
+import {useAuth} from '../pages/context/AuthContext';
 
 const QR = () => {
-  const { displayLnurl, setDisplayLnUrl } = useContext(AuthContext);
-  
+  const {displayLnurl, setDisplayLnUrl, lnData} = useAuth();
+
   const closeAuth = () => {
     setDisplayLnUrl();
   }
-  
+
   return (
-    <div className='lnurl_wrap' style={{ display: displayLnurl ? 'flex': 'none' }}>
+    <div className='lnurl_wrap' style={{display: displayLnurl ? 'flex' : 'none'}}>
       <QRCodeSVG
-        value={''}
+        value={lnData.encoded.toLocaleUpperCase()}
         size={250}
         bgColor={'transparent'}
       />

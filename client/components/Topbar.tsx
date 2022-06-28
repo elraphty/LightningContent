@@ -1,19 +1,17 @@
 import type { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import { setToStorage } from '../helpers/localstorage';
+import { useAuth } from '../pages/context/AuthContext';
 
 const Topbar: NextPage = () => {
-  const router = useRouter();
+  let { logout } = useAuth();
 
-  const logout = async () => {
-    await setToStorage('token', '');
-    router.push('/login');
+  const logoutUser = async () => {
+    logout();
   }
 
   return (
     <div className='topbar'>
       <section className="right">
-        <p onClick={logout}>Logout</p>
+        <p onClick={logoutUser}>Logout</p>
       </section>
     </div>
   )
