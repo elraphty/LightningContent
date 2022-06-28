@@ -1,5 +1,5 @@
 import express, {Router} from 'express';
-import {registerUser, userLogin, userDetails, getUser, userImage, lnurlLogin} from '../../../controllers/user';
+import {registerUser, userLogin, userDetails, getUser, userImage, lnurlLogin, pseudoLogin} from '../../../controllers/user';
 import {createUser, user, updateUser} from '../../../utils/validators/user';
 import {authUser} from '../../../utils/auth';
 
@@ -13,7 +13,9 @@ router.put('/details', updateUser, authUser, userDetails);
 
 router.put('/image', authUser, userImage);
 
-router.get('/lnurl', lnurlLogin);
+router.get('/login-lnurl', lnurlLogin);
+
+router.get('/lnurl', pseudoLogin);
 
 router.get('/:userId', user, getUser);
 

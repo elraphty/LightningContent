@@ -12,7 +12,7 @@ import {emitSocketEvent} from '../config/socket';
 import UserModel from '../db/models/user';
 import UserDetail from '../db/models/userDetails';
 import UserWallet from '../db/models/userBalance';
-import mongoose from 'mongoose';
+import lnurlServer from '../config/lnurl';
 
 // Controller for registering user
 export const registerUser = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
@@ -173,7 +173,7 @@ export const userImage = async (req: Request, res: Response, next: NextFunction)
                     return responseError(res, 403, err);
                 } else {
                     await UserDetail.updateOne({user: userId}, {image: url});
-                    return responseSuccess(res, 201, 'Successfully updated user image', url);
+                    return responseSuccess(res, 200, 'Successfully updated user image', url);
                 }
             });
         });
@@ -184,7 +184,18 @@ export const userImage = async (req: Request, res: Response, next: NextFunction)
 
 export const lnurlLogin = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
+        const result = await lnurlServer.generateNewUrl("login");
+
+        res.send(result);
+    } catch (err) {
+        next(err);
+    }
+}
+
+export const pseudoLogin = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    try {
         const query = req.query;
+        
         if (query.key) {
             const key: string = String(query.key);
 
@@ -200,11 +211,8 @@ export const lnurlLogin = async (req: Request, res: Response, next: NextFunction
             }
 
             // Get user again for token
-            const usersToken: User[] = await knex<User>('users').where({pubkey: key});
+            const usersToken: User[] = await  UserModel.find({pubkey: key});
             let user = usersToken[0];
-
-            // Delete user password and pk
-            delete user.password;
 
             const token = signUser(user);
 
