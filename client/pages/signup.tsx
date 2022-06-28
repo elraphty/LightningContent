@@ -4,9 +4,6 @@ import {useMemo, useCallback, useState} from 'react';
 import {Formik, Form} from 'formik';
 import * as Yup from "yup";
 import Link from 'next/link';
-import axios from 'axios';
-import {BASE_URL} from '../helpers/axios';
-import {useRouter} from 'next/router';
 import {useAuth} from '../pages/context/AuthContext';
 import {SetSubmitting, AuthFormValues} from '../interfaces';
 import QR from '../components/Lnurl';
@@ -17,7 +14,6 @@ const validationSchema = Yup.object().shape({
 });
 
 const Signup: NextPage = () => {
-  const router = useRouter();
   const [signupError, setSignupError] = useState('');
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
