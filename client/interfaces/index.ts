@@ -3,9 +3,13 @@ export type AuthFormValues = {
   password: string;
 };
 
+export type SettingsFormValues = {
+  apiKey?: string;
+  defaultCurrency: string;
+  satsRatio: string;
+};
+
 export type SetSubmitting<T> = (values: T, actions: { setSubmitting: (isSubmitting: boolean) => void }) => void;
-
-
 export interface TransactionLogs {
   id?: number;
   amount: number;

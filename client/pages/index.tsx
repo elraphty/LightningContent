@@ -6,19 +6,17 @@ import RequireAuth from '../components/RequireAuth';
 
 const Home: NextPage = () => {
   return (
-    <RequireAuth>
-      <>
-        <Head>
-          <title>Create Next App</title>
-          <meta name="description" content="Lightning app" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+    <>
+      <Head>
+        <title>Create Next App</title>
+        <meta name="description" content="Lightning app" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-        <BodyWrap>
-          <h1 className='text-red mt-5'>Hello Testing</h1>
-        </BodyWrap>
-      </>
-    </RequireAuth>
+      <BodyWrap>
+        <h1 className=''>Hello Testing</h1>
+      </BodyWrap>
+    </>
   )
 }
 

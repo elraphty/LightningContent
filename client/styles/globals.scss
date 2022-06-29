@@ -78,7 +78,8 @@ label.form__label {
       color: $textLightColor;
       margin-bottom: 20px;
       font-family: $textFont;
-      font-size: 1rem;
+      font-size: 1.05rem;
+      font-weight: 700;
       width: 100%;
 
       @media screen and (max-width: 950px) {
@@ -90,14 +91,17 @@ label.form__label {
         display: block;
       }
       a:hover {
-        background: #808080;
+        background: #FEFEFE;
         width: 100%;
+        color: #000000;
+        border-radius: 5px;
       }
     }
 
     li.activeLink a {
-      background-color: #FEFEFE;
-      color: #000000;
+      background-color: #000000;
+      border-radius: 5px;
+      color: #FFFFFF;
     }
   }
 }
@@ -227,7 +231,7 @@ label.form__label {
   background: $textLightColor;
   max-height: $bodyWrapHeight;
   overflow-y: scroll;
-  padding: 20px 25px;
+  padding: 20px 30px;
 
   @media screen and (max-width: 800px) {
     width: 100vw;
@@ -438,4 +442,15 @@ label.form__label {
     font-family: $fontDemi;
     font-size: 0.95rem;
   }
+}
+
+.page_headers {
+  font-size: 1.2rem;
+  font-family: $fontDemi;
+}
+
+.divider {
+  height: 0.5px;
+  background-color: #D3D3D3;
+  margin-top: 5px;
 }

@@ -1,6 +1,6 @@
 import axios from "axios";
 import {AuthFormValues} from "../interfaces";
-import { BASE_URL } from ".";
+import {BASE_URL} from ".";
 
 axios.defaults.baseURL = BASE_URL;
 

@@ -1,35 +1,26 @@
-import type { NextPage } from 'next';
-import { ReactNode, useEffect } from 'react';
-import { getFromStorage } from '../helpers/localstorage';
-import { useRouter } from 'next/router';
+import type {NextPage} from 'next';
+import {ReactNode} from 'react';
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';
 import MobileNav from './MobileNav';
+import RequireAuth from './RequireAuth';
 
 type BodyProps = {
-   children: ReactNode
+  children: ReactNode
 }
 
 const BodyWrap: NextPage<BodyProps> = (props: BodyProps) => {
-  const router = useRouter();
-
-  useEffect(() => {
-    // const token = getFromStorage('token');
-    // if (!token) {
-    //   router.push('/login');
-    // }
-  }, [router])
-
-
   return (
-    <>
-      <Sidebar />
-      <Topbar />
-      <MobileNav />
-      <div className='bodywrap'>
-        {props.children}
-      </div>
-    </>
+    <RequireAuth>
+      <>
+        <Sidebar />
+        <Topbar />
+        <MobileNav />
+        <div className='bodywrap'>
+          {props.children}
+        </div>
+      </>
+    </RequireAuth>
   )
 }
 

@@ -16,9 +16,9 @@ export const getSettings = async (req: Request, res: Response, next: NextFunctio
     const reqUser = req as RequestUser;
     const userId = reqUser.user._id;
     
-    const user: User | null = await UserSettings.findOne({user: userId});
+    const settings = await UserSettings.findOne({user: userId});
     
-    responseSuccess(res, 200, 'Successfully retrieve settngs', {user});
+    responseSuccess(res, 200, 'Successfully retrieve settngs', settings);
   } catch (err) {
     next(err);
   }
@@ -40,9 +40,9 @@ export const updateSettings = async (req: Request, res: Response, next: NextFunc
     
     await UserSettings.updateOne({user: userId}, {defaultCurrency, satsRatio});
     
-    const user: User | null = await UserSettings.findOne({user: userId});
+    const settings = await UserSettings.findOne({user: userId});
     
-    responseSuccess(res, 200, 'Successfully updated settngs', {user});
+    responseSuccess(res, 200, 'Successfully updated settngs', settings);
   } catch (err) {
     next(err);
   }

@@ -1,4 +1,5 @@
 import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
+import {BASE_URL} from '.';
 
 const axiosApiInstance = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL,
@@ -19,7 +20,7 @@ axiosApiInstance.interceptors.response.use(
 export default axiosApiInstance;
 
 export async function axiosRequestInterceptor(config: AxiosRequestConfig) {
-  const accessToken = await localStorage.getItem("lighning-token");
+  const accessToken = await localStorage.getItem("lightning-token");
   config.headers = {
     Authorization: `Bearer ${accessToken}`
   };
