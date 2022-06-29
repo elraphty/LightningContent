@@ -1,7 +1,6 @@
 import {Request, Response, NextFunction} from 'express';
-import knex from '../db';
 import {validationResult} from 'express-validator';
-import {User, UserBalance, UserDetails} from '../interfaces/Db';
+import {User} from '../interfaces/Db';
 import {Formidable} from 'formidable';
 import {responseSuccess, responseErrorValidation, responseError} from '../utils';
 import {uploadFile} from '../config/cloudinary';
@@ -9,9 +8,7 @@ import {hashPassword, verifyPassword} from '../utils/password';
 import {signUser} from '../utils/jwt';
 import {RequestUser} from '../interfaces';
 import {emitSocketEvent} from '../config/socket';
-import UserModel from '../db/models/user';
-import UserDetail from '../db/models/userDetails';
-import UserWallet from '../db/models/userBalance';
+import {UserModel, UserDetail, UserWallet, UserSettings} from '../db/models';
 import lnurlServer from '../config/lnurl';
 
 // Controller for registering user
@@ -208,6 +205,7 @@ export const pseudoLogin = async (req: Request, res: Response, next: NextFunctio
 
                 await UserDetail.create({user: userId});
                 await UserWallet.create({user: userId});
+                await UserSettings.create({user: userId});
             }
 
             // Get user again for token

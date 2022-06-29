@@ -2,7 +2,7 @@ import {body, param} from 'express-validator';
 
 const myWhitelist: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_#@.';
 
-export const createUser = [
+export const createUserVal = [
   body('username')
     .not().isEmpty()
     .isString()
@@ -23,7 +23,7 @@ export const createUser = [
     .withMessage('Password length must be up to six characters'),
 ]
 
-export const updateUser = [
+export const updateUserVal = [
   body('firstName')
     .isString()
     .ltrim()
@@ -54,7 +54,7 @@ export const updateUser = [
     .withMessage('Enter bio'),
 ]
 
-export const user = [
+export const userVal = [
   param('userId')
     .not().isEmpty()
     .isString()
