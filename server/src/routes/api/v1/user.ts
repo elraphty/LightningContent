@@ -1,5 +1,14 @@
 import {Router} from 'express';
-import {registerUser, userLogin, userDetails, getUser, userImage, lnurlLogin, pseudoLogin} from '../../../controllers/user';
+import {
+  registerUser, 
+  userLogin, 
+  userDetails, 
+  getDetails,
+  getUser, 
+  userImage, 
+  lnurlLogin, 
+  pseudoLogin
+} from '../../../controllers/user';
 import {createUserVal, userVal, updateUserVal} from '../../../utils/validators/user';
 import {authUser} from '../../../utils/auth';
 
@@ -8,6 +17,8 @@ const router: Router = Router();
 router.post('/register', createUserVal, registerUser);
 
 router.post('/login', createUserVal, userLogin);
+
+router.get('/details', authUser, getDetails);
 
 router.put('/details', updateUserVal, authUser, userDetails);
 

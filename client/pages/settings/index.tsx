@@ -46,10 +46,10 @@ const Settings: NextPage = () => {
         toast.success('Updated settings succesfully');
         setUserSettings(res.data.data);
       } else {
-        toast.success('Could not update settings ');
+        toast.error('Could not update settings ');
       }
     } catch (e) {
-      toast.success('Could not update settings ');
+      toast.error('Could not update settings ');
     }
 
     setSubmitting(false);

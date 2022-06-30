@@ -68,8 +68,8 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
 
         if (users.length > 0) {
             let user = users[0];
-            
-            
+
+
             if (!verifyPassword(pass, user.password)) {
                 return responseError(res, 404, 'Incorrect password');
             }
@@ -124,7 +124,7 @@ export const userDetails = async (req: Request, res: Response, next: NextFunctio
     }
 };
 
-// Controller for user details
+// Controller for user and details
 export const getUser = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
         // Finds the validation errors in this request and wraps them in an object with handy functions
@@ -145,6 +145,28 @@ export const getUser = async (req: Request, res: Response, next: NextFunction): 
         } else {
             return responseError(res, 404, 'Not a valid user');
         }
+    } catch (err) {
+        next(err);
+    }
+};
+
+// Controller for user details
+export const getDetails = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    try {
+        // Finds the validation errors in this request and wraps them in an object with handy functions
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return responseErrorValidation(res, 400, errors.array());
+        }
+
+        const reqUser = req as RequestUser;
+        const userId = reqUser.user._id;
+
+        const details = await UserDetail.findOne({user: userId});
+
+        return responseSuccess(res, 200, 'Successfully got user details', details);
+
     } catch (err) {
         next(err);
     }
@@ -192,7 +214,7 @@ export const lnurlLogin = async (req: Request, res: Response, next: NextFunction
 export const pseudoLogin = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
         const query = req.query;
-        
+
         if (query.key) {
             const key: string = String(query.key);
 
@@ -209,7 +231,7 @@ export const pseudoLogin = async (req: Request, res: Response, next: NextFunctio
             }
 
             // Get user again for token
-            const usersToken: User[] = await  UserModel.find({pubkey: key});
+            const usersToken: User[] = await UserModel.find({pubkey: key});
             let user = usersToken[0];
 
             const token = signUser(user);

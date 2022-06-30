@@ -1,6 +1,6 @@
 import {body, param} from 'express-validator';
 
-const myWhitelist: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_#@.';
+const myWhitelist: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_#@./:%';
 
 export const createUserVal = [
   body('username')
